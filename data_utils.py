@@ -97,8 +97,8 @@ def analyze_dataset(df):
     plt.xlabel('Number of Words')
     plt.title('Boxplot of Summary Length')
     plt.grid(True)
-    plt.savefig('books_dataframe_summary.png')
     plt.show()
+    plt.savefig('books_dataframe_summary.png')
 
 def keyword_extraction(text):
     """
