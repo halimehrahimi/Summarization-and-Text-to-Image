@@ -92,13 +92,13 @@ def analyze_dataset(df):
     df_describe = df.describe()
     df_describe.to_csv('books_dataframe_summary.csv')
     # Boxplot of Summary Length
-    plt.figure(figsize=(6, 8))
+    fig = plt.figure(figsize=(6, 8))
     plt.boxplot(df['summary_length'], showfliers=False)
-    plt.xlabel('Number of Words')
+    plt.ylabel('Number of Words')
     plt.title('Boxplot of Summary Length')
     plt.grid(True)
     plt.show()
-    plt.savefig('books_dataframe_summary.png')
+    fig.savefig('books_dataframe_summary.png')
 
 def keyword_extraction(text):
     """
