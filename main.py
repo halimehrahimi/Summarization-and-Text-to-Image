@@ -25,7 +25,7 @@ def process_books(books, summarizer, text_to_image):
             book['keywords'] = keyword_extraction(book['summary'])
             book['plot'] = summarizer.summarize(book['summary'])
             image = text_to_image.transform(book['plot'])
-            image_path = f"./book_covers/{index}.png"
+            image_path = f"./book_covers/{index}_{book['book_title']}.png"
             image.save(image_path)
             book['cover_path'] = image_path
             writer.writerow(book)
