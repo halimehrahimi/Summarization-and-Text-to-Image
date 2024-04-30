@@ -1,13 +1,16 @@
 import argparse
 import os
 import csv
+import pathlib
 from data_utils import *
 from summary_utils import *
 from image_utils import *
 
 
-def process_books(books, summarizer, text_to_image):
-
+def process_books(books, summarizer, text_to_image) -> None:
+    """
+    Process including Keyword Extraction, Condensing and transforming Text to Image.
+    """
     if not os.path.exists('./book_covers'):
         os.makedirs('./book_covers')
 
@@ -15,10 +18,12 @@ def process_books(books, summarizer, text_to_image):
         csv_path = 'summarized_books.csv'
     else:
         csv_path = f"summarized_book_{books.index[0]}.csv"
+
     if os.path.exists(csv_path):
         os.remove(csv_path)
-    columns = [x for x in books.columns] + ['keywords', 'plot', 'cover_path']
-    with open(csv_path, mode='a', newline='') as csv_file:
+
+    columns = list(books.columns) + ['keywords', 'plot', 'cover_path']
+    with open(csv_path, mode='a', newline='', encoding="utf-8") as csv_file:
         writer = csv.writer(csv_file)
         writer.writerow(columns)
         for index, book in books.iterrows():
@@ -30,10 +35,14 @@ def process_books(books, summarizer, text_to_image):
             book['cover_path'] = image_path
             writer.writerow(book)
 
-def main(datapath, book_title, sum_model_name, sum_model_path, cuda):
+def main(datapath, book_title, sum_model_name, sum_model_path, cuda) -> None:
+    """
+    Preprocess the Data, Find and Process a book provided a book title, or Process all books.
+    """
+    datapath = pathlib.Path(datapath)
     all_books = create_dataset(datapath)
 
-    if book_title is not None:
+    if book_title:
         book_title_lower = book_title.lower()
         book_rows = all_books[all_books['book_title'].str.lower() == book_title_lower]
         if book_rows.empty:
@@ -57,11 +66,11 @@ def main(datapath, book_title, sum_model_name, sum_model_path, cuda):
     process_books(book_rows, summarizer, text_to_image)
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Argument Parser for Data Path and Models")
+    parser = argparse.ArgumentParser(description="Argument Parser for Data Path, Book Title, and Models")
     parser.add_argument("--datapath", type=str, default='booksummaries.txt', help="Path to the data")
-    parser.add_argument("--book_title", type=str, default=None, help="The title of the book")
+    parser.add_argument("--book_title", type=str, default='', help="The title of the book")
     parser.add_argument("--sum_model_name", type=str, default='lexrank', help="Name a T5 Model (If not provided, LexRank; an extractive method)")
-    parser.add_argument("--sum_model_path", type=str, default=None, help="Path to summarization model (In case you have a local pretrained model)")
+    parser.add_argument("--sum_model_path", type=str, default='', help="Path to summarization model (In case you have a local pretrained model)")
     parser.add_argument("--cuda", type=bool, default=True, help="Do You Want to Use CUDA? Write True or False. Default is True.")
     args = parser.parse_args()
 

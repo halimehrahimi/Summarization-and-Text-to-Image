@@ -1,3 +1,4 @@
+import pathlib
 import nltk
 from transformers import T5Tokenizer, T5ForConditionalGeneration
 import torch
@@ -10,14 +11,21 @@ nltk.download('punkt')
 
 
 class T5Summ:
-    def __init__(self, model_name: str, model_path=None, cuda=True) -> None:
+    """
+    Summarization Class using T5 Models
+    """
+    def __init__(self, model_name: str, model_path: str ='', cuda=True) -> None:
         self.device = 'cuda' if cuda and torch.cuda.is_available() else 'cpu'
         self.model = T5ForConditionalGeneration.from_pretrained(model_name).to(self.device)
         self.tokenizer = T5Tokenizer.from_pretrained(model_name, legacy=False)
-        if model_path!=None:
+        if model_path:
+            model_path = pathlib.Path(model_path)
             self.model.load_state_dict(torch.load(model_path, map_location=torch.device(self.device)))
 
-    def summarize(self, input_text: str):
+    def summarize(self, input_text: str) -> str:
+        """
+        Summarize the input text.
+        """
         # Tokenize the input text
         inputs = self.tokenizer.encode("summarize: " + input_text, max_length=2048, truncation=True, return_tensors="pt")
         inputs = inputs.to(self.device)
@@ -29,9 +37,16 @@ class T5Summ:
         return summary
 
 class LexRankSumm:
+    """
+    Summarization Class using LexRank Method.
+    """
     def __init__(self) -> None:
         self.summarizer = LexRankSummarizer()
-    def summarize(self, input_text: str, num_sentences=2):
+
+    def summarize(self, input_text: str, num_sentences: int = 2) -> str:
+        """
+        Summarize the input text.
+        """
         parser = PlaintextParser.from_string(input_text, Tokenizer("english"))
         summary = self.summarizer(parser.document, num_sentences)
         plot = " ".join(str(sentence) for sentence in summary)

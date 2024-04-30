@@ -1,0 +1,10 @@
+pandas
+matplotlib
+nltk
+scikit-learn
+transformers
+torch
+sumy
+diffusers
+pillow
+accelerate

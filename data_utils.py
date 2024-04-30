@@ -25,7 +25,7 @@ CONTRACTIONS = {
 }
 
 
-def create_dataset(path):
+def create_dataset(path) -> pd.DataFrame:
     """
     Load and preprocess the dataset.
     """
@@ -40,7 +40,7 @@ def create_dataset(path):
     df = df[df['summary_length'] >= 5]
     return df
 
-def parse_genre_entry(genre_info):
+def parse_genre_entry(genre_info: str) -> list:
     """
     Parse genre information from JSON format.
     """
@@ -49,7 +49,7 @@ def parse_genre_entry(genre_info):
     genre_dict = json.loads(genre_info)
     return list(genre_dict.values())
 
-def clean_summary(summary):
+def clean_summary(summary: str) -> str:
     """
     Clean and preprocess the book summary.
     """
@@ -60,7 +60,7 @@ def clean_summary(summary):
     summary = remove_words(summary)  # Remove specific phrases
     return summary
 
-def remove_punctuations(text):
+def remove_punctuations(text: str) -> str:
     """
     Remove punctuations from text.
     """
@@ -69,7 +69,7 @@ def remove_punctuations(text):
     clean_text = re.sub(r'\s+', ' ', clean_text)  # Remove extra whitespaces
     return clean_text.strip()
 
-def expand_contractions(text):
+def expand_contractions(text: str) -> str:
     """
     Expand contractions in text.
     """
@@ -77,7 +77,7 @@ def expand_contractions(text):
         text = text.replace(contraction, expansion)
     return text
 
-def remove_words(text):
+def remove_words(text: str) -> str:
     """
     Remove specific phrases or patterns from text.
     """
@@ -85,7 +85,7 @@ def remove_words(text):
     cleaned_text = re.sub(pattern, '', text)
     return cleaned_text
 
-def analyze_dataset(df):
+def analyze_dataset(df: pd.DataFrame) -> None:
     """
     Analyze the dataset and generate summary statistics.
     """
@@ -100,7 +100,7 @@ def analyze_dataset(df):
     plt.show()
     fig.savefig('books_dataframe_summary.png')
 
-def keyword_extraction(text):
+def keyword_extraction(text: str) -> list:
     """
     Extract keywords using TF-IDF vectorization.
     """
