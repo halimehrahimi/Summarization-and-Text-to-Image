@@ -38,6 +38,7 @@ def create_dataset(path) -> pd.DataFrame:
     df['summary'] = df['summary'].apply(clean_summary)
     df['summary_length'] = df['summary'].str.split().str.len()
     df = df[df['summary_length'] >= 5]
+    check_missing(df)
     return df
 
 def parse_genre_entry(genre_info: str) -> list:
@@ -100,6 +101,18 @@ def analyze_dataset(df: pd.DataFrame) -> None:
     plt.show()
     fig.savefig('books_dataframe_summary.png')
 
+def check_missing(df: pd.DataFrame) -> None:
+    """
+    Check the number of missing values
+    """
+    df.replace('', None, inplace=True)
+    missing_values = df.isnull().sum()
+    print("Missing values in each column:")
+    print(missing_values)
+    missing_percentage = (df.isnull().sum() / len(df)) * 100
+    print("\nPercentage of missing values in each column:")
+    print(missing_percentage)
+    
 def keyword_extraction(text: str) -> list:
     """
     Extract keywords using TF-IDF vectorization.
