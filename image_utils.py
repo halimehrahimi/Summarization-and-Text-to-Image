@@ -16,8 +16,9 @@ class StableDiff:
         """
         Function to transform text to images.
         """
-        input_texts = ["Book Cover: " + input_text] * 4 # Create four trials
-        images = self.pipeline(input_texts).images
+        input_texts = ["Book Cover: " + input_text]
+        # Create four trials
+        images = self.pipeline(input_texts, num_images_per_prompt=4).images
         return image_grid(images)
 
 
@@ -29,7 +30,7 @@ def image_grid(imgs: list, rows: int = 2, cols: int = 2) -> Image:
 
     w, h = imgs[0].size
     grid = Image.new('RGB', size = (cols*w,
-                                   rows*w))
+                                   rows*h))
 
     for i, img in enumerate(imgs):
         grid.paste(img, box = (i%cols*w, i // cols*h))
